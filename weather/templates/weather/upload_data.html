@@ -1,0 +1,45 @@
+{% extends 'weather/base.html' %}
+{% block title %}Upload Data - Weather Analytics Portal{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 style="color: var(--primary-color); font-weight: 700;"><i class="fas fa-upload me-2"></i>Upload Weather Data</h2>
+    <p class="text-muted">Current records in database: <strong>{{ total_records }}</strong></p>
+    
+    <div class="card mt-4">
+        <div class="card-header"><i class="fas fa-file-csv"></i> Upload CSV File</div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">{{ form.csv_file.label_tag }}{{ form.csv_file }}<div class="form-text">{{ form.csv_file.help_text }}</div></div>
+                <button type="submit" class="btn btn-primary-custom"><i class="fas fa-upload me-2"></i>Upload & Import</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header"><i class="fas fa-info-circle"></i> Required CSV Format</div>
+        <div class="card-body">
+            <p>The CSV file must have the following columns (case-insensitive):</p>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead><tr><th>Column</th><th>Required</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td>date</td><td>Yes</td><td>Date in YYYY-MM-DD format</td></tr>
+                        <tr><td>city</td><td>Yes</td><td>City name</td></tr>
+                        <tr><td>temperature_max</td><td>Yes</td><td>Maximum temperature in Celsius</td></tr>
+                        <tr><td>temperature_min</td><td>Yes</td><td>Minimum temperature in Celsius</td></tr>
+                        <tr><td>temperature_avg</td><td>Yes</td><td>Average temperature in Celsius</td></tr>
+                        <tr><td>humidity</td><td>Yes</td><td>Humidity percentage (0-100)</td></tr>
+                        <tr><td>precipitation</td><td>Yes</td><td>Precipitation in mm</td></tr>
+                        <tr><td>wind_speed</td><td>Yes</td><td>Wind speed in km/h</td></tr>
+                        <tr><td>wind_direction</td><td>No</td><td>Wind direction (N, S, E, W, etc.)</td></tr>
+                        <tr><td>pressure</td><td>No</td><td>Atmospheric pressure in hPa</td></tr>
+                        <tr><td>visibility</td><td>No</td><td>Visibility in km</td></tr>
+                        <tr><td>weather_condition</td><td>No</td><td>Weather description</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

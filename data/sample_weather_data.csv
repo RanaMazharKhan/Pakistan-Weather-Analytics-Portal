@@ -1,0 +1,31 @@
+date,city,temperature_max,temperature_min,temperature_avg,humidity,precipitation,wind_speed,wind_direction,pressure,visibility,weather_condition
+2024-01-01,Lahore,20,8,14,65,0,12,NE,1015,10,Clear
+2024-01-01,Karachi,28,18,23,70,0,15,W,1012,12,Partly Cloudy
+2024-01-01,Islamabad,15,3,9,75,2,10,N,1018,8,Cloudy
+2024-01-02,Lahore,22,10,16,60,0,14,NE,1014,11,Clear
+2024-01-02,Karachi,29,19,24,68,0,18,W,1011,13,Sunny
+2024-01-02,Islamabad,17,5,11,72,5,12,NW,1017,7,Rain
+2024-01-03,Lahore,18,7,12.5,68,3,16,E,1013,9,Cloudy
+2024-01-03,Karachi,27,17,22,72,1,20,SW,1010,11,Partly Cloudy
+2024-01-03,Islamabad,14,2,8,78,8,8,N,1016,6,Rain
+2024-01-04,Lahore,21,9,15,62,0,10,NE,1015,12,Clear
+2024-01-04,Karachi,30,20,25,65,0,14,W,1012,14,Sunny
+2024-01-04,Islamabad,16,4,10,74,0,11,N,1018,9,Partly Cloudy
+2024-01-05,Lahore,19,6,12.5,70,5,18,E,1012,7,Rain
+2024-01-05,Karachi,26,16,21,78,3,22,SW,1009,8,Cloudy
+2024-01-05,Islamabad,12,1,6.5,82,12,6,N,1015,5,Heavy Rain
+2024-01-06,Lahore,23,11,17,58,0,8,NE,1016,13,Sunny
+2024-01-06,Karachi,31,21,26,62,0,12,W,1013,15,Sunny
+2024-01-06,Islamabad,18,6,12,70,0,9,NW,1019,10,Clear
+2024-01-07,Lahore,25,13,19,55,0,10,NE,1017,14,Sunny
+2024-01-07,Karachi,32,22,27,60,0,10,W,1014,16,Sunny
+2024-01-07,Islamabad,20,8,14,68,0,8,N,1020,11,Clear
+2024-01-08,Lahore,24,12,18,57,0,12,E,1016,13,Partly Cloudy
+2024-01-08,Karachi,30,20,25,64,0,14,SW,1013,14,Partly Cloudy
+2024-01-08,Islamabad,19,7,13,69,0,10,N,1019,10,Partly Cloudy
+2024-01-09,Lahore,22,10,16,63,2,15,NE,1014,10,Cloudy
+2024-01-09,Karachi,28,18,23,70,0,16,W,1012,12,Cloudy
+2024-01-09,Islamabad,17,5,11,73,4,12,NW,1018,8,Light Rain
+2024-01-10,Lahore,20,8,14,66,0,11,N,1015,11,Clear
+2024-01-10,Karachi,29,19,24,67,0,13,W,1011,13,Sunny
+2024-01-10,Islamabad,15,3,9,76,6,9,N,1017,7,Rain

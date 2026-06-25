@@ -1,0 +1,168 @@
+{% extends 'weather/base.html' %}
+{% block title %}Dashboard - Weather Analytics Portal{% endblock %}
+{% block content %}
+<div class="container animate-fade-up">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 style="color: var(--primary-color); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Analysis</h2>
+            <p class="text-muted mb-0"><i class="fas fa-globe me-1"></i> Live data sync via <a href="https://open-meteo.com/" target="_blank" class="text-decoration-none fw-semibold">Open-Meteo API</a> — Pakistani metropolitan cities, 90-day archive</p>
+        </div>
+    </div>
+    
+    <!-- Filter Card with Staggered Fade-in -->
+    <div class="card animate-fade-up delay-1">
+        <div class="card-header"><i class="fas fa-filter me-2"></i>Filter Analytics Workspace</div>
+        <div class="card-body p-4">
+            <form method="get">
+                <div class="row g-3">
+                    <div class="col-md-3">{{ form.city.label_tag }}{{ form.city }}</div>
+                    <div class="col-md-2">{{ form.date_from.label_tag }}{{ form.date_from }}</div>
+                    <div class="col-md-2">{{ form.date_to.label_tag }}{{ form.date_to }}</div>
+                    <div class="col-md-2">{{ form.temp_min.label_tag }}{{ form.temp_min }}</div>
+                    <div class="col-md-2">{{ form.temp_max.label_tag }}{{ form.temp_max }}</div>
+                    <div class="col-md-1 d-flex align-items-end"><button type="submit" class="btn btn-primary-custom w-100" style="padding: 12px 0;"><i class="fas fa-search"></i></button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if stats %}
+    <!-- Stat Cards with Staggered Delay Animations -->
+    <div class="row g-4 mt-1">
+        <div class="col-lg-3 col-md-6 animate-fade-up delay-2">
+            <div class="stat-card">
+                <div class="icon" style="background: linear-gradient(135deg, #1a2a6c, #2d4aa8); color: white;"><i class="fas fa-database"></i></div>
+                <div class="value">{{ stats.total_records }}</div>
+                <div class="text-secondary fw-semibold">Total Records</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 animate-fade-up delay-2">
+            <div class="stat-card">
+                <div class="icon" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white;"><i class="fas fa-temperature-high"></i></div>
+                <div class="value">{{ stats.temperature.overall_max }}°C</div>
+                <div class="text-secondary fw-semibold">Highest Temp</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 animate-fade-up delay-2">
+            <div class="stat-card">
+                <div class="icon" style="background: linear-gradient(135deg, #17a2b8, #20c997); color: white;"><i class="fas fa-temperature-low"></i></div>
+                <div class="value">{{ stats.temperature.overall_min }}°C</div>
+                <div class="text-secondary fw-semibold">Lowest Temp</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 animate-fade-up delay-2">
+            <div class="stat-card">
+                <div class="icon" style="background: linear-gradient(135deg, #fdbb2d, #f5a623); color: white;"><i class="fas fa-cloud-rain"></i></div>
+                <div class="value">{{ stats.precipitation.total }}mm</div>
+                <div class="text-secondary fw-semibold">Total Rainfall</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Layout with Slide-up Animation -->
+    <div class="row g-4 mt-3">
+        <div class="col-lg-8 animate-fade-up delay-3">
+            <div class="card h-100 mb-0">
+                <div class="card-header"><i class="fas fa-chart-line me-2"></i>Temperature Trends</div>
+                <div class="card-body p-4">
+                    <div class="chart-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 animate-fade-up delay-3">
+            <div class="card h-100 mb-0">
+                <div class="card-header"><i class="fas fa-chart-pie me-2"></i>Weather Conditions</div>
+                <div class="card-body p-4">
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-width Precipitation Chart -->
+    <div class="row g-4 mt-3 animate-fade-up delay-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-chart-bar me-2"></i>Precipitation by City</div>
+                <div class="card-body p-4">
+                    <div class="chart-container" style="height:320px">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Loading / Sync State Card -->
+    <div class="card mt-4 animate-fade-up delay-2">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-cloud-sun-rain text-secondary mb-3" style="font-size: 80px; animation: float 3s ease-in-out infinite;"></i>
+            <h3 class="fw-bold mt-2">Syncing Weather Analytics Database...</h3>
+            <p class="text-secondary mb-4">Fetching historical climate logs from the Open-Meteo API. Please refresh in a moment.</p>
+            <a href="{% url 'weather:dashboard' %}" class="btn btn-primary-custom"><i class="fas fa-sync me-2"></i>Refresh Workspace</a>
+            {% if user.is_staff %}
+            <a href="{% url 'weather:refresh_data' %}" class="btn btn-outline-secondary ms-2 border-2 px-4" style="border-radius: 12px;"><i class="fas fa-download me-2"></i>Force Database Sync</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+{% if stats %}
+<script>
+// Chart Styling Constants
+const chartGridColor = '#e2e8f0';
+const chartTitleColor = '#64748b';
+
+// Render Charts
+new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {{ line_chart_data|safe }},
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { labels: { font: { family: 'Outfit' } } }
+        },
+        scales: {
+            x: { grid: { color: chartGridColor }, ticks: { font: { family: 'Outfit' } } },
+            y: { grid: { color: chartGridColor }, ticks: { font: { family: 'Outfit' } }, title: { display: true, text: 'Temperature (°C)', font: { family: 'Outfit', weight: 'bold' } } }
+        }
+    }
+});
+
+new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {{ pie_chart_data|safe }},
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'bottom', labels: { font: { family: 'Outfit' } } }
+        }
+    }
+});
+
+new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {{ bar_chart_data|safe }},
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { labels: { font: { family: 'Outfit' } } }
+        },
+        scales: {
+            x: { grid: { color: chartGridColor }, ticks: { font: { family: 'Outfit' } } },
+            y: { beginAtZero: true, grid: { color: chartGridColor }, ticks: { font: { family: 'Outfit' } }, title: { display: true, text: 'Precipitation (mm)', font: { family: 'Outfit', weight: 'bold' } } }
+        }
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

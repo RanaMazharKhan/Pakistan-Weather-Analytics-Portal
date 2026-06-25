@@ -1,0 +1,45 @@
+{% extends 'weather/base.html' %}
+{% block title %}{{ title }} - Weather Analytics Portal{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header"><i class="fas fa-edit"></i> {{ title }}</div>
+                <div class="card-body">
+                    {% if record %}
+                    <div class="alert alert-danger">Are you sure you want to delete this record?<br><strong>{{ record.city }} - {{ record.date }}</strong></div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <a href="{% url 'weather:data_list' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger-custom"><i class="fas fa-trash me-2"></i>Delete</button>
+                    </form>
+                    {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">{{ form.date.label_tag }}{{ form.date }}</div>
+                            <div class="col-md-6">{{ form.city.label_tag }}{{ form.city }}</div>
+                            <div class="col-md-4">{{ form.temperature_max.label_tag }}{{ form.temperature_max }}</div>
+                            <div class="col-md-4">{{ form.temperature_min.label_tag }}{{ form.temperature_min }}</div>
+                            <div class="col-md-4">{{ form.temperature_avg.label_tag }}{{ form.temperature_avg }}</div>
+                            <div class="col-md-6">{{ form.humidity.label_tag }}{{ form.humidity }}</div>
+                            <div class="col-md-6">{{ form.precipitation.label_tag }}{{ form.precipitation }}</div>
+                            <div class="col-md-4">{{ form.wind_speed.label_tag }}{{ form.wind_speed }}</div>
+                            <div class="col-md-4">{{ form.wind_direction.label_tag }}{{ form.wind_direction }}</div>
+                            <div class="col-md-4">{{ form.pressure.label_tag }}{{ form.pressure }}</div>
+                            <div class="col-md-6">{{ form.visibility.label_tag }}{{ form.visibility }}</div>
+                            <div class="col-md-6">{{ form.weather_condition.label_tag }}{{ form.weather_condition }}</div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{% url 'weather:data_list' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary-custom"><i class="fas fa-save me-2"></i>Save</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

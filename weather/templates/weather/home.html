@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Analytics Portal | Interactive Climate Insights & Updates</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore advanced weather analytics, climate statistics, and updates. Register to unlock interactive charts, historical searches, and customizable daily email reports.">
+    <meta name="keywords" content="weather analytics, weather updates, climate statistics, meteorological reports, Lahore weather analysis, Karachi weather updates, interactive charts">
+    <meta name="author" content="Weather Analytics Portal Team">
+    <!-- OpenGraph Tags for Social Media SEO -->
+    <meta property="og:title" content="Weather Analytics Portal | Climate Insights & Updates">
+    <meta property="og:description" content="Get professional climate analytics, statistics, and customized daily weather updates. Sign in to search historical records and view interactive charts.">
+    <meta property="og:type" content="website">
+    
+    <!-- Google Fonts & Stylesheets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --card-glass: rgba(30, 41, 59, 0.7);
+            --accent-glow: #f5a623;
+            --accent-cyan: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top, #1e1b4b, var(--primary-bg));
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Header */
+        .glass-header {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--text-main) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-glow);
+            margin-right: 8px;
+        }
+
+        /* Hero Styling */
+        .hero-section {
+            padding: 100px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px;
+        }
+
+        .lead-text {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-weight: 350;
+        }
+
+        /* CTA Buttons */
+        .btn-custom {
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, var(--accent-glow), #fdbb2d);
+            color: #0f172a;
+            box-shadow: 0 4px 20px rgba(245, 166, 35, 0.35);
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(245, 166, 35, 0.6);
+            color: #0f172a;
+        }
+
+        .btn-outline-glass {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-outline-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Stats Cards */
+        .glass-card {
+            background: var(--card-glass);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .stat-val {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        /* Weather Widget Preview Section */
+        .section-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        .city-tab {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .city-tab.active, .city-tab:hover {
+            background: var(--accent-cyan);
+            color: #0f172a;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Live Preview Widget */
+        .preview-widget {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .widget-locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        /* Knowledge Center */
+        .knowledge-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .knowledge-icon {
+            font-size: 2.2rem;
+            color: var(--accent-glow);
+            margin-bottom: 20px;
+        }
+
+        /* Accordion Styling */
+        .accordion-item {
+            background: var(--card-glass) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            margin-bottom: 12px;
+            border-radius: 15px !important;
+            overflow: hidden;
+        }
+
+        .accordion-button {
+            background: transparent !important;
+            color: var(--text-main) !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 20px;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: var(--accent-cyan) !important;
+        }
+
+        .accordion-button::after {
+            filter: invert(1);
+        }
+
+        .accordion-body {
+            color: var(--text-muted);
+            padding: 0 20px 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 0;
+            margin-top: 80px;
+            color: var(--text-muted);
+        }
+
+        .footer-logo {
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark glass-header">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-cloud-sun"></i> Weather Analytics</a>
+            <div class="d-flex gap-2">
+                <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-outline-glass px-3 py-2"><i class="fas fa-sign-in-alt me-1"></i> Log In</a>
+                <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-glow px-3 py-2"><i class="fas fa-user-plus me-1"></i> Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <h1>Advanced Weather Analytics</h1>
+            <p class="lead-text">Unlock professional meteorological data structures, historical searches, and responsive visualizations for climate tracking.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap mb-5">
+                <a href="{% url 'accounts:register' %}" class="btn-custom btn-glow"><i class="fas fa-chart-line"></i> Start Free Analytics</a>
+                <a href="#preview" class="btn-custom btn-outline-glass"><i class="fas fa-play"></i> Explore Climate Data</a>
+            </div>
+            
+            <div class="row g-4 max-width-md mx-auto mt-4">
+                <div class="col-md-4">
+                    <div class="glass-card">
+                        <div class="stat-val">{{ total_records|default:"1000" }}+</div>
+                        <div class="text-secondary fw-semibold">Weather Records</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card">
+                        <div class="stat-val">{{ cities_count|default:"5" }}+</div>
+                        <div class="text-secondary fw-semibold">Analyzed Cities</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card">
+                        <div class="stat-val">5+</div>
+                        <div class="text-secondary fw-semibold">Chart Types</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Preview Section -->
+    <section id="preview" class="container py-5">
+        <h2 class="section-title">Live Weather & Climate Widget</h2>
+        <p class="section-subtitle">Real-time local statistics simulator. Switch cities below to see basic updates.</p>
+        
+        <div class="d-flex justify-content-center gap-2 mb-4 flex-wrap">
+            <button class="city-tab active" onclick="updateWidget('Lahore', 34, 25, 62, 12, 'Hazy')" id="btn-Lahore">Lahore</button>
+            <button class="city-tab" onclick="updateWidget('Karachi', 31, 28, 75, 22, 'Windy')" id="btn-Karachi">Karachi</button>
+            <button class="city-tab" onclick="updateWidget('Islamabad', 29, 21, 55, 8, 'Sunny')" id="btn-Islamabad">Islamabad</button>
+            <button class="city-tab" onclick="updateWidget('London', 18, 11, 80, 15, 'Rainy')" id="btn-London">London</button>
+        </div>
+
+        <div class="preview-widget">
+            <!-- Glassmorphism Preview Card -->
+            <div class="glass-card text-center p-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 id="widget-city" class="fw-bold m-0" style="font-size: 2rem;">Lahore</h3>
+                    <span id="widget-condition-badge" class="badge bg-secondary px-3 py-2 fs-6">Hazy</span>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-6 text-start">
+                        <div class="display-3 fw-bold" id="widget-temp">34°C</div>
+                        <div class="text-secondary">Feels like <span id="widget-feels">38°C</span></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex flex-column gap-2 text-end text-secondary">
+                            <div><i class="fas fa-tint me-2 text-cyan"></i> Humidity: <span id="widget-humidity" class="text-light fw-semibold">62%</span></div>
+                            <div><i class="fas fa-wind me-2 text-warning"></i> Wind: <span id="widget-wind" class="text-light fw-semibold">12 km/h</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Sign-in Overlay for Deeper Analysis -->
+            <div class="widget-locked-overlay">
+                <div class="fs-1 text-warning mb-3"><i class="fas fa-lock"></i></div>
+                <h4 class="fw-bold mb-2">Historical Analytics Locked</h4>
+                <p class="text-secondary text-center px-4 mb-4" style="max-width: 420px; font-size: 0.95rem;">
+                    You are viewing basic real-time simulators. Create a free account to unlock historical weather records, scatter plots, trend lines, and custom reports.
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-outline-glass px-4 py-2">Log In</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-glow px-4 py-2">Create Account</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Weather Knowledge Hub -->
+    <section class="container py-5">
+        <h2 class="section-title">Weather Knowledge Center</h2>
+        <p class="section-subtitle">Learn the fundamental meteorological principles driving our climate and analytics engines.</p>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card knowledge-card">
+                    <div>
+                        <div class="knowledge-icon"><i class="fas fa-droplet"></i></div>
+                        <h4 class="fw-bold mb-3">Relative Humidity</h4>
+                        <p class="text-secondary" style="font-size: 0.95rem;">
+                            The ratio of water vapor in the air compared to the maximum amount the air can hold at that specific temperature. Higher humidity makes hot days feel sticky because sweat cannot evaporate quickly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card knowledge-card">
+                    <div>
+                        <div class="knowledge-icon"><i class="fas fa-wind"></i></div>
+                        <h4 class="fw-bold mb-3">Wind Dynamics</h4>
+                        <p class="text-secondary" style="font-size: 0.95rem;">
+                            Wind is caused by differences in atmospheric pressure. Air moves from high-pressure zones to low-pressure zones. The steeper the pressure gradient, the higher the wind speed.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card knowledge-card">
+                    <div>
+                        <div class="knowledge-icon"><i class="fas fa-cloud-sun-rain"></i></div>
+                        <h4 class="fw-bold mb-3">Climate vs Weather</h4>
+                        <p class="text-secondary" style="font-size: 0.95rem;">
+                            Weather describes short-term atmospheric conditions (minutes to weeks), like a rainy afternoon. Climate represents the long-term patterns and averages of weather over 30+ years.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card knowledge-card">
+                    <div>
+                        <div class="knowledge-icon"><i class="fas fa-temperature-half"></i></div>
+                        <h4 class="fw-bold mb-3">Heat Index</h4>
+                        <p class="text-secondary" style="font-size: 0.95rem;">
+                            Also known as "apparent temperature", it combines actual air temperature and relative humidity to measure how hot it actually feels to the human body.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="container py-5" style="max-width: 800px;">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Answers to common inquiries about the Weather Analytics Portal.</p>
+        
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        How is the weather data collected?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Our portal utilizes historical APIs and local meteorological weather logs. In local development, the system uses custom automated services to seed realistic, high-quality data for Pakistan cities and global capitals so you always have data to visualize.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        What analytics features are unlocked after signing in?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        When you sign in, you gain access to the full **Interactive Dashboard**. You can filter weather data by temperature range, dates, and cities, view multi-dimensional trend charts (scatter plots, line trends, histograms, pie distributions), search the full database, and download PDF or CSV reports.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Can I export custom weather analysis reports?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes! Inside the search and chart pages, you can specify filters for your target cities, dates, and variables, and instantly export the matches into formatted CSV files or publication-quality PDF reports.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        How do automated email reports work?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        When you update your account preferences in the **Profile** section, you can opt-in to receive daily email summaries. Our task scheduling engine generates statistical insights and daily summaries for your preferred cities and emails them directly to your verified inbox.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <div class="footer-logo"><i class="fas fa-cloud-sun"></i> Weather Analytics</div>
+                    <p class="mb-0" style="font-size: 0.9rem;">Providing advanced climate tracking, visual analytics, and automated meteorological alerts.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-4 mt-md-0">
+                    <p class="mb-1 text-secondary" style="font-size: 0.95rem;">Weather Analytics Portal - Pakistan</p>
+                    <small>© 2026 Weather Analytics Portal. All rights reserved.</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateWidget(city, temp, min, humidity, wind, condition) {
+            // Update Active Tab Class
+            const tabs = document.querySelectorAll('.city-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById('btn-' + city).classList.add('active');
+
+            // Update Widget Content
+            document.getElementById('widget-city').innerText = city;
+            document.getElementById('widget-temp').innerText = temp + '°C';
+            document.getElementById('widget-feels').innerText = (temp + 2) + '°C';
+            document.getElementById('widget-humidity').innerText = humidity + '%';
+            document.getElementById('widget-wind').innerText = wind + ' km/h';
+            
+            const badge = document.getElementById('widget-condition-badge');
+            badge.innerText = condition;
+            
+            // Toggle condition colors
+            if (condition === 'Sunny') {
+                badge.className = 'badge bg-warning text-dark px-3 py-2 fs-6';
+            } else if (condition === 'Rainy') {
+                badge.className = 'badge bg-primary px-3 py-2 fs-6';
+            } else if (condition === 'Windy') {
+                badge.className = 'badge bg-info text-dark px-3 py-2 fs-6';
+            } else {
+                badge.className = 'badge bg-secondary px-3 py-2 fs-6';
+            }
+        }
+    </script>
+</body>
+</html>

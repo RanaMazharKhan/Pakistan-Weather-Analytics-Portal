@@ -1,0 +1,71 @@
+{% extends 'weather/base.html' %}
+{% block title %}Search - Weather Analytics Portal{% endblock %}
+{% block content %}
+<div class="container animate-fade-up">
+    <h2 style="color: var(--primary-color); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 20px;"><i class="fas fa-search me-2"></i>Search & Filter</h2>
+    
+    <div class="card mt-4 animate-fade-up delay-1">
+        <div class="card-header"><i class="fas fa-filter me-2"></i>Filters</div>
+        <div class="card-body p-4">
+            <form method="get">
+                <div class="row g-3">
+                    <div class="col-md-2">{{ form.city.label_tag }}{{ form.city }}</div>
+                    <div class="col-md-2">{{ form.date_from.label_tag }}{{ form.date_from }}</div>
+                    <div class="col-md-2">{{ form.date_to.label_tag }}{{ form.date_to }}</div>
+                    <div class="col-md-2">{{ form.temp_min.label_tag }}{{ form.temp_min }}</div>
+                    <div class="col-md-2">{{ form.temp_max.label_tag }}{{ form.temp_max }}</div>
+                    <div class="col-md-2">{{ form.sort_by.label_tag }}{{ form.sort_by }}</div>
+                </div>
+                <div class="mt-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <button type="submit" class="btn btn-primary-custom px-4"><i class="fas fa-search me-2"></i>Search</button>
+                        <a href="{% url 'weather:search' %}" class="btn btn-outline-secondary px-4 ms-2" style="border-radius: 12px; font-weight: 600; padding: 12px 25px;"><i class="fas fa-times me-2"></i>Clear</a>
+                    </div>
+                    <div>
+                        <a href="{% url 'weather:reports' %}?{{ request.GET.urlencode }}&format=csv" class="btn btn-success-custom"><i class="fas fa-file-csv me-2"></i>Export CSV</a>
+                        <a href="{% url 'weather:reports' %}?{{ request.GET.urlencode }}&format=pdf" class="btn btn-danger-custom ms-2"><i class="fas fa-file-pdf me-2"></i>Export PDF</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4 animate-fade-up delay-2">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="fas fa-table me-2"></i>Meteorological Records Table</span>
+            <span class="badge bg-white text-primary px-3 py-2 fs-6">Results Count: {{ total_results }}</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Date</th><th>City</th><th>Max Temp</th><th>Min Temp</th><th>Avg Temp</th><th>Humidity</th><th>Rainfall</th><th>Wind</th><th>Condition</th></tr></thead>
+                    <tbody>
+                        {% for record in page_obj %}
+                        <tr>
+                            <td>{{ record.date|date:"Y-m-d" }}</td>
+                            <td><strong>{{ record.city }}</strong></td>
+                            <td>{{ record.temperature_max }}°C</td>
+                            <td>{{ record.temperature_min }}°C</td>
+                            <td>{{ record.temperature_avg }}°C</td>
+                            <td>{{ record.humidity }}%</td>
+                            <td>{{ record.precipitation }}mm</td>
+                            <td>{{ record.wind_speed }} km/h</td>
+                            <td>{{ record.weather_condition }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="9" class="text-center py-4">No records found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if page_obj.has_other_pages %}
+            <nav class="mt-4"><ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}">Previous</a></li>{% endif %}
+                <li class="page-item active"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}">Next</a></li>{% endif %}
+            </ul></nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

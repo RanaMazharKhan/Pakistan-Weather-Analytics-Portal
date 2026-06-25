@@ -1,0 +1,36 @@
+{% extends 'weather/base.html' %}
+{% block title %}Visualizations - Weather Analytics Portal{% endblock %}
+{% block content %}
+<div class="container animate-fade-up">
+    <h2 style="color: var(--primary-color); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 20px;"><i class="fas fa-chart-line me-2"></i>Advanced Visualizations</h2>
+    
+    <div class="card mt-4 animate-fade-up delay-1">
+        <div class="card-header"><i class="fas fa-filter me-2"></i>Filter Analytics Workspace</div>
+        <div class="card-body p-4">
+            <form method="get"><div class="row g-3">
+                <div class="col-md-3">{{ form.city.label_tag }}{{ form.city }}</div>
+                <div class="col-md-3">{{ form.date_from.label_tag }}{{ form.date_from }}</div>
+                <div class="col-md-3">{{ form.date_to.label_tag }}{{ form.date_to }}</div>
+                <div class="col-md-3 d-flex align-items-end"><button type="submit" class="btn btn-primary-custom w-100" style="padding: 12px 0;"><i class="fas fa-filter"></i> Apply Filters</button></div>
+            </div></form>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-12 animate-fade-up delay-2"><div class="card"><div class="card-header"><i class="fas fa-chart-line me-2"></i>Temperature Trends (Line Chart)</div><div class="card-body p-4"><div class="chart-container"><canvas id="lineChart"></canvas></div></div></div></div>
+        <div class="col-lg-6 animate-fade-up delay-3"><div class="card"><div class="card-header"><i class="fas fa-chart-bar me-2"></i>Precipitation (Bar Chart)</div><div class="card-body p-4"><div class="chart-container"><canvas id="barChart"></canvas></div></div></div></div>
+        <div class="col-lg-6 animate-fade-up delay-3"><div class="card"><div class="card-header"><i class="fas fa-chart-pie me-2"></i>Conditions (Pie Chart)</div><div class="card-body p-4"><div class="chart-container"><canvas id="pieChart"></canvas></div></div></div></div>
+        <div class="col-lg-6 animate-fade-up delay-4"><div class="card"><div class="card-header"><i class="fas fa-chart-area me-2"></i>Temperature Distribution (Histogram)</div><div class="card-body p-4"><div class="chart-container"><canvas id="histogramChart"></canvas></div></div></div></div>
+        <div class="col-lg-6 animate-fade-up delay-4"><div class="card"><div class="card-header"><i class="fas fa-braille me-2"></i>Temp vs Humidity (Scatter)</div><div class="card-body p-4"><div class="chart-container"><canvas id="scatterChart"></canvas></div></div></div></div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+{% if line_chart_data %}new Chart(document.getElementById('lineChart'),{type:'line',data:{{ line_chart_data|safe }},options:{responsive:true,maintainAspectRatio:false}});{% endif %}
+{% if bar_chart_data %}new Chart(document.getElementById('barChart'),{type:'bar',data:{{ bar_chart_data|safe }},options:{responsive:true,maintainAspectRatio:false}});{% endif %}
+{% if pie_chart_data %}new Chart(document.getElementById('pieChart'),{type:'pie',data:{{ pie_chart_data|safe }},options:{responsive:true,maintainAspectRatio:false}});{% endif %}
+{% if histogram_data %}new Chart(document.getElementById('histogramChart'),{type:'bar',data:{{ histogram_data|safe }},options:{responsive:true,maintainAspectRatio:false}});{% endif %}
+{% if scatter_data %}new Chart(document.getElementById('scatterChart'),{type:'scatter',data:{{ scatter_data|safe }},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Temperature'}},y:{title:{display:true,text:'Humidity'}}}}});{% endif %}
+</script>
+{% endblock %}
