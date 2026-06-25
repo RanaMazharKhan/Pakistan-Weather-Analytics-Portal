@@ -144,7 +144,6 @@ EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', 5))
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/weather/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
-
-EMAIL_VERIFICATION_REQUIRED = True
+EMAIL_VERIFICATION_REQUIRED = os.getenv('EMAIL_VERIFICATION_REQUIRED', 'True') == 'True'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

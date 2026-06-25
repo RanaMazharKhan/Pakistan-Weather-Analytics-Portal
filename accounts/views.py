@@ -26,23 +26,35 @@ def register_view(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
+            
+            # Check if email verification is required
+            email_verification_required = getattr(settings, 'EMAIL_VERIFICATION_REQUIRED', True)
+            if email_verification_required:
+                user.is_active = False
+            else:
+                user.is_active = True
+                
             user.save()
             UserProfile.objects.get_or_create(user=user)
 
-            try:
-                send_verification_email(request, user)
-            except Exception:
-                logger.exception('Failed to send verification email to %s', user.email)
-                messages.warning(
-                    request,
-                    'Your account was created, but we could not send the verification email. '
-                    'Try signing in — we will resend the verification link automatically.',
-                )
-                return redirect('accounts:verification_sent')
+            if email_verification_required:
+                try:
+                    send_verification_email(request, user)
+                except Exception:
+                    logger.exception('Failed to send verification email to %s', user.email)
+                    messages.warning(
+                        request,
+                        'Your account was created, but we could not send the verification email. '
+                        'Try signing in — we will resend the verification link automatically.',
+                    )
+                    return redirect('accounts:verification_sent')
 
-            messages.success(request, 'Registration successful! Please check your email to verify your account.')
-            return redirect('accounts:verification_sent')
+                messages.success(request, 'Registration successful! Please check your email to verify your account.')
+                return redirect('accounts:verification_sent')
+            else:
+                login(request, user)
+                messages.success(request, 'Registration successful! Your account is active.')
+                return redirect('weather:dashboard')
     else:
         form = UserRegistrationForm()
     
