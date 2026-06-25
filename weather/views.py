@@ -25,7 +25,10 @@ def is_admin(user):
 def home_view(request):
     if request.user.is_authenticated:
         return redirect('weather:dashboard')
-    ensure_weather_data()
+    try:
+        ensure_weather_data()
+    except Exception as e:
+        logger.exception("Failed to sync weather data in home_view")
     total_records = WeatherData.objects.count()
     cities_count = WeatherData.objects.values('city').distinct().count()
     latest_data = WeatherData.objects.order_by('-date')[:5]
@@ -69,7 +72,10 @@ def dashboard_view(request):
 
 @login_required
 def search_view(request):
-    ensure_weather_data()
+    try:
+        ensure_weather_data()
+    except Exception as e:
+        logger.exception("Failed to sync weather data in search_view")
     form = SearchFilterForm(request.GET or None)
     city = request.GET.get('city')
     date_from = request.GET.get('date_from')
@@ -88,7 +94,10 @@ def search_view(request):
 
 @login_required
 def visualizations_view(request):
-    ensure_weather_data()
+    try:
+        ensure_weather_data()
+    except Exception as e:
+        logger.exception("Failed to sync weather data in visualizations_view")
     form = SearchFilterForm(request.GET or None)
     city = request.GET.get('city')
     date_from = request.GET.get('date_from')
@@ -110,7 +119,10 @@ def visualizations_view(request):
 
 @login_required
 def insights_view(request):
-    ensure_weather_data()
+    try:
+        ensure_weather_data()
+    except Exception as e:
+        logger.exception("Failed to sync weather data in insights_view")
     form = SearchFilterForm(request.GET or None)
     city = request.GET.get('city')
     date_from = request.GET.get('date_from')
