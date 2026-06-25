@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /weather/dashboard/
+Disallow: /weather/search/
+Disallow: /weather/visualizations/
+Disallow: /weather/insights/
+Disallow: /weather/reports/
+Disallow: /weather/upload-data/
+Disallow: /weather/data/
+Disallow: /accounts/profile/
+Disallow: /accounts/logout/
+
+Sitemap: https://pakweatheranalytics-production.up.railway.app/sitemap.xml
