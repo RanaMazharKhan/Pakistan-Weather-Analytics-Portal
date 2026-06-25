@@ -72,9 +72,14 @@ WSGI_APPLICATION = 'weather_portal.wsgi.application'
 # Database
 import dj_database_url
 
+db_path = BASE_DIR / 'db.sqlite3'
+# If a persistent disk is mounted on Render, use it to persist the SQLite database
+if os.path.exists('/data'):
+    db_path = Path('/data/db.sqlite3')
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        default=f"sqlite:///{db_path}",
         conn_max_age=600
     )
 }
