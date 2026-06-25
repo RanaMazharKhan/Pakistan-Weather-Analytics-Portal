@@ -24,6 +24,21 @@ RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+# CSRF Trusted Origins for Django 4.0+
+CSRF_TRUSTED_ORIGINS = []
+csrf_origins = os.getenv('CSRF_TRUSTED_ORIGINS')
+if csrf_origins:
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins.split(',') if origin.strip()]
+else:
+    for host in ALLOWED_HOSTS:
+        host = host.strip()
+        if host and host != '*':
+            if not host.startswith(('http://', 'https://')):
+                CSRF_TRUSTED_ORIGINS.append(f"https://{host}")
+                CSRF_TRUSTED_ORIGINS.append(f"http://{host}")
+            else:
+                CSRF_TRUSTED_ORIGINS.append(host)
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
