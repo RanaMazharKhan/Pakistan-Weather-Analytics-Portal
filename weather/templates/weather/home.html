@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,7 +281,10 @@
     <!-- Header Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark glass-header">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-cloud-sun"></i> Weather Analytics</a>
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{% static 'weather_logo.png' %}" alt="Logo" width="40" height="40" class="d-inline-block align-top me-2" style="border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);">
+                Weather Analytics
+            </a>
             <div class="d-flex gap-2">
                 <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-outline-glass px-3 py-2"><i class="fas fa-sign-in-alt me-1"></i> Log In</a>
                 <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-glow px-3 py-2"><i class="fas fa-user-plus me-1"></i> Sign Up</a>
