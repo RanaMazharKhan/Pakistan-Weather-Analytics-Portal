@@ -1,17 +1,144 @@
 {% extends 'weather/base.html' %}
 {% block title %}Dashboard - Weather Analytics Portal{% endblock %}
 {% block content %}
+<style>
+    /* Live Pulse */
+    .live-pulse {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Live Card styling */
+    .live-card {
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    .live-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Shortcut cards and buttons */
+    .shortcut-card {
+        border-radius: 16px;
+        background: linear-gradient(135deg, #ffffff, #fdfdfd);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+        transition: all 0.3s ease;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none !important;
+        color: inherit !important;
+        display: block;
+        height: 100%;
+    }
+    .shortcut-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--secondary-color);
+        box-shadow: 0 15px 30px rgba(45, 74, 168, 0.08);
+    }
+    .shortcut-icon {
+        font-size: 2rem;
+        color: var(--secondary-color);
+        margin-bottom: 12px;
+        transition: transform 0.3s ease;
+    }
+    .shortcut-card:hover .shortcut-icon {
+        transform: scale(1.1);
+    }
+</style>
+
 <div class="container animate-fade-up">
+    <!-- Welcome Banner -->
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h2 style="color: var(--primary-color); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Analysis</h2>
-            <p class="text-muted mb-0"><i class="fas fa-globe me-1"></i> Live data sync via <a href="https://open-meteo.com/" target="_blank" class="text-decoration-none fw-semibold">Open-Meteo API</a> — Pakistani metropolitan cities, 90-day archive</p>
+            <h2 style="color: var(--primary-color); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 5px;"><i class="fas fa-tachometer-alt me-2"></i>Dashboard Control Center</h2>
+            <p class="text-muted mb-0"><i class="fas fa-user-check me-1 text-success"></i> Welcome back, <strong>{{ user.username }}</strong>! Here is your dynamic climate intelligence console.</p>
+        </div>
+    </div>
+
+    <!-- Live Weather Feed for Preferred Cities -->
+    <div class="mb-4">
+        <h4 class="fw-bold mb-3" style="color: var(--primary-color);"><i class="fas fa-satellite-dish me-2 text-success"></i>Live Feeds: My Preferred Cities</h4>
+        <div class="row g-3 row-cols-1 row-cols-md-2 row-cols-lg-3" id="live-feeds-deck">
+            <!-- Spinner / Loading State -->
+            <div class="col-12 text-center py-4" id="live-feeds-spinner">
+                <div class="spinner-border text-primary" role="status"></div>
+                <div class="text-muted mt-2">Loading live metrics for preferred cities...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts and Weather Advice Row -->
+    <div class="row g-4 mb-4">
+        <!-- Shortcuts Grid (8 columns) -->
+        <div class="col-lg-8">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 pt-3 pb-0 fw-bold" style="color: var(--primary-color);"><i class="fas fa-circle-nodes me-2"></i>Workspace Quick Links</div>
+                <div class="card-body p-3">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <a href="{% url 'weather:search' %}" class="shortcut-card">
+                                <div class="shortcut-icon"><i class="fas fa-search"></i></div>
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem;">Search Database</h6>
+                                <small class="text-muted" style="font-size:0.75rem;">Query logs</small>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="{% url 'weather:upload' %}" class="shortcut-card">
+                                <div class="shortcut-icon"><i class="fas fa-upload"></i></div>
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem;">Ingest CSV</h6>
+                                <small class="text-muted" style="font-size:0.75rem;">Upload datasets</small>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="{% url 'weather:insights' %}" class="shortcut-card">
+                                <div class="shortcut-icon"><i class="fas fa-brain"></i></div>
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem;">Insights Hub</h6>
+                                <small class="text-muted" style="font-size:0.75rem;">Climate stats</small>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="{% url 'accounts:profile' %}" class="shortcut-card">
+                                <div class="shortcut-icon"><i class="fas fa-user-gear"></i></div>
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem;">My Profile</h6>
+                                <small class="text-muted" style="font-size:0.75rem;">Manage alerts</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Advice / Status Panel (4 columns) -->
+        <div class="col-lg-4">
+            <div class="card h-100 shadow-sm border-0" id="advice-card">
+                <div class="card-header bg-white border-bottom-0 pt-3 pb-0 fw-bold" style="color: var(--primary-color);"><i class="fas fa-heart-pulse me-2"></i>Meteorological Advisory</div>
+                <div class="card-body p-3 d-flex flex-column justify-content-center text-center">
+                    <div class="advice-icon mb-2" style="font-size: 2.2rem; color: var(--accent-color);"><i class="fas fa-circle-notch fa-spin" id="advice-icon-element"></i></div>
+                    <h6 class="fw-bold mb-1" id="advice-title">Evaluating Conditions...</h6>
+                    <p class="text-secondary mb-0" id="advice-text" style="font-size: 0.8rem;">Analysing coordinates to provide tailored climate warnings and safety alerts.</p>
+                </div>
+            </div>
         </div>
     </div>
     
     <!-- Filter Card with Staggered Fade-in -->
-    <div class="card animate-fade-up delay-1">
-        <div class="card-header"><i class="fas fa-filter me-2"></i>Filter Analytics Workspace</div>
+    <div class="card animate-fade-up delay-1 mb-4">
+        <div class="card-header bg-white fw-bold" style="color: var(--primary-color);"><i class="fas fa-filter me-2"></i>Filter Analytics Workspace</div>
         <div class="card-body p-4">
             <form method="get">
                 <div class="row g-3">
@@ -113,12 +240,12 @@
 </div>
 {% endblock %}
 {% block extra_js %}
-{% if stats %}
 <script>
 // Chart Styling Constants
 const chartGridColor = '#e2e8f0';
 const chartTitleColor = '#64748b';
 
+{% if stats %}
 // Render Charts
 new Chart(document.getElementById('lineChart'), {
     type: 'line',
@@ -163,6 +290,174 @@ new Chart(document.getElementById('barChart'), {
         }
     }
 });
-</script>
 {% endif %}
+
+// Live Weather Feeds Logic
+const cityCoords = {
+    "lahore": { name: "Lahore", lat: 31.5204, lon: 74.3587, province: "Punjab" },
+    "karachi": { name: "Karachi", lat: 24.8607, lon: 67.0011, province: "Sindh" },
+    "islamabad": { name: "Islamabad", lat: 33.6844, lon: 73.0479, province: "Capital Territory" },
+    "rawalpindi": { name: "Rawalpindi", lat: 33.5973, lon: 73.0479, province: "Punjab" },
+    "faisalabad": { name: "Faisalabad", lat: 31.4504, lon: 73.1350, province: "Punjab" },
+    "multan": { name: "Multan", lat: 30.1575, lon: 71.5249, province: "Punjab" },
+    "peshawar": { name: "Peshawar", lat: 34.0151, lon: 71.5249, province: "KPK" },
+    "quetta": { name: "Quetta", lat: 30.1798, lon: 66.9750, province: "Balochistan" },
+    "sialkot": { name: "Sialkot", lat: 32.4972, lon: 74.5361, province: "Punjab" },
+    "gujranwala": { name: "Gujranwala", lat: 32.1877, lon: 74.1945, province: "Punjab" },
+    "hyderabad": { name: "Hyderabad", lat: 25.3960, lon: 68.3772, province: "Sindh" },
+    "bahawalpur": { name: "Bahawalpur", lat: 29.3544, lon: 71.6911, province: "Punjab" }
+};
+
+const userPreferredCities = {{ preferred_cities|safe }};
+
+function mapWmoCode(code) {
+    switch (code) {
+        case 0:
+            return { text: "Sunny", icon: "fa-sun text-warning" };
+        case 1:
+        case 2:
+        case 3:
+            return { text: "Partly Cloudy", icon: "fa-cloud-sun text-info" };
+        case 45:
+        case 48:
+            return { text: "Foggy", icon: "fa-smog text-secondary" };
+        case 51:
+        case 53:
+        case 55:
+            return { text: "Drizzle", icon: "fa-cloud-rain text-info" };
+        case 61:
+        case 63:
+        case 65:
+            return { text: "Rainy", icon: "fa-cloud-showers-heavy text-primary" };
+        case 71:
+        case 73:
+        case 75:
+            return { text: "Snowy", icon: "fa-snowflake text-light" };
+        case 80:
+        case 81:
+        case 82:
+            return { text: "Showers", icon: "fa-cloud-showers-water text-info" };
+        case 95:
+        case 96:
+        case 99:
+            return { text: "Thunderstorm", icon: "fa-cloud-bolt text-danger" };
+        default:
+            return { text: "Overcast", icon: "fa-cloud text-muted" };
+    }
+}
+
+async function loadLiveDashboardFeeds() {
+    const deck = document.getElementById("live-feeds-deck");
+    deck.innerHTML = ""; // clear spinner
+    
+    let mainCityTemp = null;
+    let mainCityRain = null;
+    let mainCityCond = null;
+    let mainCityName = "";
+    
+    for (const cityName of userPreferredCities) {
+        const key = cityName.toLowerCase().trim();
+        const cityData = cityCoords[key];
+        if (!cityData) continue;
+        
+        try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${cityData.lat}&longitude=${cityData.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,wind_speed_10m,weather_code`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("API network failure");
+            
+            const data = await response.json();
+            const current = data.current;
+            const mapping = mapWmoCode(current.weather_code);
+            
+            // Track the first city for the health advisory block
+            if (mainCityTemp === null) {
+                mainCityTemp = current.temperature_2m;
+                mainCityRain = current.precipitation;
+                mainCityCond = mapping.text;
+                mainCityName = cityData.name;
+            }
+            
+            const cardHtml = `
+                <div class="col">
+                    <div class="card live-card h-100 border-0 shadow-sm p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="fw-bold mb-0 text-dark" style="font-size:1.05rem;">${cityData.name}</h5>
+                                <small class="text-muted"><i class="fas fa-location-dot me-1"></i>${cityData.province}</small>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="live-pulse me-1"></span>
+                                <span class="text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.5px;">LIVE</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between my-2">
+                            <h3 class="display-6 fw-bold mb-0 text-dark" style="letter-spacing:-1px;">${Math.round(current.temperature_2m)}°C</h3>
+                            <span class="fs-1 ${mapping.icon.split(' ')[1]}"><i class="fas ${mapping.icon.split(' ')[0]}"></i></span>
+                        </div>
+                        <div class="mb-2" style="font-size: 0.95rem;">
+                            <span class="badge bg-light text-dark border px-2 py-1">${mapping.text}</span>
+                        </div>
+                        <div class="row g-2 border-top pt-2 mt-1 text-secondary" style="font-size: 0.8rem;">
+                            <div class="col-6"><i class="fas fa-tint me-1 text-info"></i> Hum: <span class="fw-bold text-dark">${current.relative_humidity_2m}%</span></div>
+                            <div class="col-6"><i class="fas fa-wind me-1 text-warning"></i> Wind: <span class="fw-bold text-dark">${current.wind_speed_10m} km/h</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            deck.innerHTML += cardHtml;
+        } catch (err) {
+            console.error(`Failed to fetch live feed for ${cityName}:`, err);
+        }
+    }
+    
+    // If no feeds were loaded successfully
+    if (deck.innerHTML === "") {
+        deck.innerHTML = `
+            <div class="col-12 text-center py-3">
+                <div class="text-danger fw-semibold"><i class="fas fa-triangle-exclamation me-1"></i> Could not load live feeds. Verify internet connectivity.</div>
+            </div>
+        `;
+    }
+    
+    // Update Meteorological Advisory card
+    updateHealthAdvisory(mainCityTemp, mainCityRain, mainCityCond, mainCityName);
+}
+
+function updateHealthAdvisory(temp, rain, cond, cityName) {
+    const card = document.getElementById("advice-card");
+    const iconEl = document.getElementById("advice-icon-element");
+    const titleEl = document.getElementById("advice-title");
+    const textEl = document.getElementById("advice-text");
+    
+    if (temp === null) {
+        titleEl.innerText = "No Feeds Available";
+        textEl.innerText = "Select preferred cities in profile settings to display advice.";
+        return;
+    }
+    
+    if (temp > 35) {
+        card.style.border = "1px solid rgba(220, 53, 69, 0.25)";
+        iconEl.className = "fas fa-temperature-arrow-up text-danger";
+        titleEl.innerText = `Excessive Heat: ${cityName}`;
+        textEl.innerText = "Extremely high temperatures detected. Stay well-hydrated, limit direct sun exposure, and avoid outdoor activity.";
+    } else if (temp < 15) {
+        card.style.border = "1px solid rgba(23, 162, 184, 0.25)";
+        iconEl.className = "fas fa-snowflake text-info";
+        titleEl.innerText = `Cold Advisory: ${cityName}`;
+        textEl.innerText = "Chilly conditions observed. Dress warmly, protect sensitive plants, and ensure proper home heating ventilation.";
+    } else if (rain > 0.5 || cond.includes("Rain") || cond.includes("Thunderstorm")) {
+        card.style.border = "1px solid rgba(0, 123, 255, 0.25)";
+        iconEl.className = "fas fa-cloud-showers-heavy text-primary";
+        titleEl.innerText = `Rain Advisory: ${cityName}`;
+        textEl.innerText = "Precipitation active. Carry rain gear, drive with caution due to wet roads, and expect localized delays.";
+    } else {
+        card.style.border = "1px solid rgba(40, 167, 69, 0.25)";
+        iconEl.className = "fas fa-face-smile text-success";
+        titleEl.innerText = `Optimal Weather: ${cityName}`;
+        textEl.innerText = "Atmospheric conditions are pleasant. Safe for outdoor recreation, travel, and normal field activities.";
+    }
+}
+
+window.addEventListener("DOMContentLoaded", loadLiveDashboardFeeds);
+</script>
 {% endblock %}

@@ -45,11 +45,18 @@ def dashboard_view(request):
     bar_chart_data = get_chart_data(queryset, 'bar')
     pie_chart_data = get_chart_data(queryset, 'pie')
     
+    preferred_cities = []
+    if hasattr(request.user, 'profile'):
+        preferred_cities = request.user.profile.get_preferred_cities_list()
+    if not preferred_cities:
+        preferred_cities = ['Lahore', 'Karachi', 'Islamabad']
+
     return render(request, 'weather/dashboard.html', {
         'form': form, 'stats': stats,
         'line_chart_data': json.dumps(line_chart_data) if line_chart_data else None,
         'bar_chart_data': json.dumps(bar_chart_data) if bar_chart_data else None,
         'pie_chart_data': json.dumps(pie_chart_data) if pie_chart_data else None,
+        'preferred_cities': preferred_cities,
     })
 
 
