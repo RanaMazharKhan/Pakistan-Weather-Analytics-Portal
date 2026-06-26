@@ -13,7 +13,7 @@ urlpatterns = [
     path('sitemap.xml', TemplateView.as_view(template_name='sitemap.xml', content_type='application/xml')),
     path('', include('weather.urls')),
     path('accounts/', include('accounts.urls')),
-    path('favicon.ico', RedirectView.as_view(url=static('weather_logo.png'))),
+   
 ]
 
 if settings.DEBUG:
