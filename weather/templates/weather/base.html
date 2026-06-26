@@ -10,8 +10,10 @@
     <meta name="author" content="PakWeatherAnalytics Team">
     
     <title>{% block title %}Weather Analytics Portal{% endblock %}</title>
-<!-- The browser sees "?v=2" and thinks it's a completely new file -->
-<link rel="icon" href="/static/logo.png?v=2" type="image/png">
+
+    <!-- FIXED FAVICON: Now uses Django static tag and matches your weather_logo.png -->
+    <link rel="icon" href="{% static 'weather_logo.png' %}?v=3" type="image/png">
+    
     <!-- Google Fonts & Bootstrap -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
